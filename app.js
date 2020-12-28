@@ -1,3 +1,5 @@
+//ALL IMPORTS
+
 // To create the routes 
 const express = require("express");
 // To initialize the App
@@ -11,19 +13,29 @@ const { createWorker } = require("tesseract.js");
 // To analize our images
 const worker = createWorker();
 
-//To save uploaded images
 
+//STORAGE
+//To save uploaded images
 const storage = multer.diskStorage({
-    destination: (req, res, cb) => {
+    destination: (req, file, cb) => {
         cb(null, "./uploads")
-    },
-    filename: (req, res, cb) => {
-        cb(null, req.file);
     }
 });
-
 const upload = multer({storage: storage}).single("avatar");
+
+
 app.set("view engine", "ejs");
+
+//ROUTES
+app.get("/", (req, res) => {
+    res.render('index');
+})
+
+app.post('/upload', (req, res) => {
+    upload(req, res, error => {
+        console.log(req.file);        
+    })
+})
 
 //Start Up the Server
 const PORT = 5000 || process.env.PORT;
