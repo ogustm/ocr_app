@@ -7,9 +7,9 @@ const fs = require("fs");
 // To allow uploading files to our server
 const multer = require("multer");
 // To read our images 
-const { TesseractWorker } = require("tesseract.js");
+const { createWorker } = require("tesseract.js");
 // To analize our images
-const worker = new TesseractWorker();
+const worker = createWorker();
 
 //To save uploaded images
 
@@ -23,3 +23,8 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({storage: storage}).single("avatar");
+app.set("view engine", "ejs");
+
+//Start Up the Server
+const PORT = 5000 || process.env.PORT;
+app.listen(PORT, () => console.log(`Hey I'm running at Port ${PORT}`));
