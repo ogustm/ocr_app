@@ -11,7 +11,9 @@ const multer = require("multer");
 // To read our images 
 const { createWorker } = require("tesseract.js");
 // To analize our images
-const worker = createWorker();
+const worker = createWorker({
+    logger: m => console.log(m), // Add logger here
+  });
 
 
 //STORAGE
@@ -42,11 +44,12 @@ app.post('/upload', (req, res) => {
             await worker.load();
             await worker.loadLanguage('eng');
             await worker.initialize('eng');
-            const { data: { text } } = await worker.recognize(data);
-            console.log(text);
-            await worker.terminate();
-          })();
-      });         
+            const { data: { text } } = await worker.recognize(data, "eng", {tessjs_create_pdf: '1'});
+            res.send(text);                    
+          })()
+          
+      });
+               
     });
 })
 
